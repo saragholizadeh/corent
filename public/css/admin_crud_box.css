@@ -1,0 +1,18 @@
+
+    .box {
+        width: 500px;
+        height: auto;
+        border-radius: 10px;
+        background-color: #e3e3e3;
+        margin: 100px auto;
+    }
+
+    .in-box {
+        padding: 15px;
+        text-align: right;
+    }
+
+    .form-error {
+
+        border: 2px solid #e74c3c;
+    }
