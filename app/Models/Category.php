@@ -10,6 +10,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
          'parent_id',
          'title' ,
@@ -18,8 +20,6 @@ class Category extends Model
     ];
     protected $hidden = [
         'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
     public function parent(){

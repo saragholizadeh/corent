@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Carbon\Carbon;
 
 class CreateImagesTable extends Migration
 {
@@ -22,7 +23,7 @@ class CreateImagesTable extends Migration
             $table->string('image');
             $table->string('path');
 
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('created_at')->default(Carbon::now()->timestamp);
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
     }

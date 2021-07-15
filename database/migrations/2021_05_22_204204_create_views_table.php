@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Carbon\Carbon;
 
 class CreateViewsTable extends Migration
 {
@@ -46,7 +47,7 @@ class CreateViewsTable extends Migration
             $table->morphs('viewable');
             $table->text('visitor')->nullable();
             $table->string('collection')->nullable();
-            $table->timestamp('viewed_at')->useCurrent();
+            $table->string('viewed_at')->default(Carbon::now()->timestamp);
         });
     }
 

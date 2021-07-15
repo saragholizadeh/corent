@@ -86,6 +86,11 @@ Route::group([
     Route::post('/sendPasswordResetLink' , [PasswordResetController::class, 'sendEmail']);
     Route::post('/resetPassword' , [ChangePasswordController::class , 'passwordResetProcess']);
 
+
+    Route::get('/sendNotification' , [EmailVerifyController::class , 'sendNotification']);
+    Route::post('/emailVerify' , [EmailVerifyController::class , 'emailVerify'])->middleware('auth');
+
+
 });
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -99,15 +104,6 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return response()->json('email sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-
- Route::get('/sendNotification' , [EmailVerifyController::class , 'sendNotification']);
-
-Route::get('/emailVerify' , [EmailVerifyController::class , 'emailVerify'])->middleware('auth');
-
-
-
-
 
 
 /*

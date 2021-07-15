@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -27,7 +27,8 @@ class CreateUrequestsTable extends Migration
 
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-                $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+                $table->string('created_at')->default(Carbon::now()->timestamp);
+
         });
     }
 

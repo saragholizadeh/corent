@@ -99,4 +99,8 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
         return $this->hasOne(Urequest::class);
     }
 
+    public function token(){
+        return $this->hasOne(Token::class);
+    }
+
 }
