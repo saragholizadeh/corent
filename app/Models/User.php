@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Post;
-use App\Models\Image;
-use App\Models\Analysis;
-use App\Models\Regulation;
+
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

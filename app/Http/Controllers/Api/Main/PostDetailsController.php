@@ -36,10 +36,15 @@ class PostDetailsController extends Controller
             $comments = Comment::where('commentable_type' , 'App\Models\Post')->with('replies.replies')->get();
         }
 
+        $postCategory = $postFind->category_id;
+
+        $related_posts = Post::where('category_id' , $postCategory)->get();
+
         return response()->json([
-           'post'  => $post,
+           'post' => $post,
            'comments'=>$comments,
            'post_views'  => $views,
+            'related_posts' =>$related_posts,
             ] , 200);
 
     }

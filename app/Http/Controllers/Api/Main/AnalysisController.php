@@ -20,7 +20,6 @@ class AnalysisController extends Controller
     /**
      * Display a listing of the user analyses (in user panel).
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -35,7 +34,7 @@ class AnalysisController extends Controller
 
 
     /**
-     * display last analyses (all users)
+     * display last analyses (all users can see)
      *
      */
     public function lastAnalyses(){
@@ -58,9 +57,6 @@ class AnalysisController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreAnalysisRequest $request){
 
@@ -108,9 +104,6 @@ class AnalysisController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -119,7 +112,6 @@ class AnalysisController extends Controller
             if(is_null($analysis)){
                 return response()->json('تحلیل  مورد نظر یافت نشد' , 404);
             }
-
 
             //record new view
             $analysisView=Analysis::find($id);

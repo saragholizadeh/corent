@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Http\Controllers\Api\Admin\Auth\EmailVerifyController;
 use App\Models\User;
+use App\Traits\EmailVerifyTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -10,12 +12,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    use EmailVerifyTrait;
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct(EmailVerifyController $sendNotification) {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
@@ -67,7 +70,20 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        $user->sendEmailVerificationNotification();
+
+        $billData = [
+            'body' => 'You have received a new bill.',
+            'thanks' => 'Thank you',
+            'text' => '$600',
+            'offer' => url('/'),
+            'bill_id' => 30061
+        ];
+
+
+        $user->notify(new EmailVerifyController());
+
+        // auth()->loginById
+        //notify
 
         return response()->json([
             'message' => 'کاربر با موفقیت ثبت شد',

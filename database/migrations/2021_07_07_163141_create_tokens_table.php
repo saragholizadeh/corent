@@ -23,6 +23,7 @@ class CreateTokensTable extends Migration
 
             $table->string('created_at')->default(Carbon::now()->timestamp);
             $table->string('expires_in')->default(Carbon::now()->addMinutes(10)->timestamp);
+            $table->string('new_code_time')->default(Carbon::now()->addMinutes(2)->timestamp);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
         });
