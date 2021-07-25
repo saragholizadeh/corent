@@ -7,17 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EmailVerification extends Notification
+class ForgetPassword extends Notification
 {
     use Queueable;
-    private $details;
+    public $details;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($details){
-        $this->details = $details;
+    public function __construct($details)
+    {
+        $this->details= $details;
     }
 
     /**
@@ -40,10 +41,10 @@ class EmailVerification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                ->greeting($this->details['greeting'])
-                ->line($this->details['body'])
-                ->line($this->details['thanks'])
-                ->line($this->details['activation_code']);
+            ->greeting($this->details['greeting'])
+            ->line($this->details['body'])
+            ->action($this->details['text'], $this->details['url'])
+            ->line($this->details['thanks']);
     }
 
     /**
@@ -55,7 +56,7 @@ class EmailVerification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'order_id' => $this->details['order_id']
+            //
         ];
     }
 }

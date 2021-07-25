@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\Admin\UserFormRequestController;
 use App\Http\Controllers\Api\Admin\Auth\EmailVerifyController;
 use App\Http\Controllers\Api\Main\RegulationDetailsController;
 use App\Http\Controllers\Api\Stack\Admin\StackCheckController;
+use App\Http\Controllers\Api\Admin\Auth\ForgetPasswordController;
 
 //Stack client-side controllers
 use App\Http\Controllers\Api\Main\SubCategoryDetailsController;
@@ -83,27 +84,15 @@ Route::group([
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::post('/sendPasswordResetLink' , [PasswordResetController::class, 'sendEmail']);
-    Route::post('/resetPassword' , [ChangePasswordController::class , 'passwordResetProcess']);
 
 
     Route::get('/sendNotification' , [EmailVerifyController::class , 'sendNotification']);
     Route::post('/emailVerify' , [EmailVerifyController::class , 'emailVerify'])->middleware('auth');
 
+    Route::post('/forgetPassword' , [ForgetPasswordController::class , 'sendEmail']);
+
 
 });
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return response()->json('verfied');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
-
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return response()->json('email sent');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
 /*

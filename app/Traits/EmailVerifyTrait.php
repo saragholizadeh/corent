@@ -36,22 +36,23 @@ trait EmailVerifyTrait
             $code .= $characters[rand(0, $charactersLength - 1)];
         }
 
-        $findToken = Token::where('user_id' , JWTAuth::user()->id)->first();
-        if(is_null($findToken)){
-            $token = new Token();
-            $token->user_id = JWTAuth::user()->id;
-            $token->code = $code;
-            $token->status = 0;
-            $token->save();
-        }else{
-            $findToken = Token::where('user_id' , JWTAuth::user()->id)->delete();
-            $token = new Token();
-            $token->user_id = JWTAuth::user()->id;
-            $token->code = $code;
-            $token->status = 0;
-            $token->save();
-            $this->deleteToken();
-        }
+//        dd(auth()->loginUsingId());
+//        $findToken = Token::where('user_id' , JWTAuth::user()->id)->first();
+//        if(is_null($findToken)){
+//            $token = new Token();
+//            $token->user_id = JWTAuth::user()->id;
+//            $token->code = $code;
+//            $token->status = 0;
+//            $token->save();
+//        }else{
+//            $findToken = Token::where('user_id' , JWTAuth::user()->id)->delete();
+//            $token = new Token();
+//            $token->user_id = JWTAuth::user()->id;
+//            $token->code = $code;
+//            $token->status = 0;
+//            $token->save();
+//            $this->deleteToken();
+//        }
         return $code;
     }
 

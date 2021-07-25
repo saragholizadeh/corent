@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Api\Admin\Auth\EmailVerifyController;
+
 use App\Models\User;
+use App\Notifications\EmailVerification;
 use App\Traits\EmailVerifyTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     use EmailVerifyTrait;
+
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct(EmailVerifyController $sendNotification) {
+    public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
@@ -52,7 +55,6 @@ class AuthController extends Controller
      */
     public function register(Request $request) {
 
-
         $validator = Validator::make($request->all(), [
             'name'=>'required|string|min:3|max:30',
             'email' => 'required|string|email|max:100|unique:users',
@@ -70,20 +72,20 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
+        $id = JWTAuth::getPayload($token)->get('sub');
+        dd($id);
+//        dd(JWTAuth::toUser($token));
 
-        $billData = [
-            'body' => 'You have received a new bill.',
-            'thanks' => 'Thank you',
-            'text' => '$600',
-            'offer' => url('/'),
-            'bill_id' => 30061
+
+        $details = [
+            'greeting' => 'سلام'.$request->name,
+            'body' => 'لطفا از کد زیر برای تایید ایمیل خود و فعالسازی حساب کاربری خود استفاده کنید',
+            'activation_code'=>$this->generateVerificationCode(),
+            'thanks' => 'متشکریم',
+            'order_id' => 101
         ];
 
-
-        $user->notify(new EmailVerifyController());
-
-        // auth()->loginById
-        //notify
+        Notification::send($user, new EmailVerification($details));
 
         return response()->json([
             'message' => 'کاربر با موفقیت ثبت شد',
@@ -138,5 +140,6 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
+
 
 }
