@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\Admin;
 
 
+use App\Models\Token;
 use App\Models\User;
 use App\Notifications\EmailVerification;
 use App\Traits\EmailVerifyTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Notification;
@@ -72,23 +75,29 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        $id = JWTAuth::getPayload($token)->get('sub');
-        dd($id);
-//        dd(JWTAuth::toUser($token));
+        $activationCode = $this->generateVerificationCode();
 
+        $newToken = new Token;
+        $newToken->code = $activationCode;
+        $newToken->status = 0;
+        $newToken->user_id = $user->id;
+        $newToken->expires_in = Carbon::now()->addMinutes(10);
+        $newToken->new_code_date = Carbon::now()->addMinutes(2);
+        $newToken->save();
 
         $details = [
             'greeting' => 'سلام'.$request->name,
             'body' => 'لطفا از کد زیر برای تایید ایمیل خود و فعالسازی حساب کاربری خود استفاده کنید',
-            'activation_code'=>$this->generateVerificationCode(),
+            'activation_code'=>$newToken->code,
             'thanks' => 'متشکریم',
             'order_id' => 101
         ];
 
         Notification::send($user, new EmailVerification($details));
 
+
         return response()->json([
-            'message' => 'کاربر با موفقیت ثبت شد',
+            'message' => 'کاربر با موفقیت ثبت شد و کد فعالسازی اکانت ارسال شد',
             'user' => $user,
             'token' => $token,
         ], 201);
@@ -106,23 +115,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'با موفقیت خارج شد']);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh() {
-        return $this->createNewToken(auth()->refresh());
-    }
-
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function userProfile() {
-        return response()->json(auth()->user());
-    }
 
     /**
      * Get the token array structure.
@@ -140,6 +132,5 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
-
 
 }

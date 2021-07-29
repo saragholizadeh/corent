@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\Admin\Auth;
 
-use App\Mail\VerifyMail;
 use App\Http\Controllers\Controller;
 use App\Models\Token;
 use App\Models\User;
+use App\Notifications\EmailVerification;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class EmailVerifyController extends Controller
@@ -17,18 +16,53 @@ class EmailVerifyController extends Controller
 
     public function sendNotification(){
 
-    $random = $this->generateVerificationCode(6);
+    $user = JWTAuth::user();
+    $name = JWTAuth::user()->name;
+    $id = JWTAuth::user()->id;
 
-            $details = [
-                'title' => 'Mail from ItSolutionStuff.com',
-                'body' =>$random,
-            ];
+    $this->checkTokenExist();
 
-            Mail::to('calikeax@gmail.com')->send(new VerifyMail($details));
+    $code = Token::where('user_id' , $id)->pluck('code');
+//    dd($code);
+
+                $details = [
+                    'greeting' => 'سلام'.$name,
+                    'body' => 'لطفا از کد زیر برای تایید ایمیل خود و فعالسازی حساب کاربری خود استفاده کنید',
+                    'activation_code'=>$code,
+                    'thanks' => 'متشکریم',
+                    'order_id' => 101
+                ];
+        Notification::send($user, new EmailVerification($details));
+
 
         return response()->json([
             'message'=>'your email verification code sent to your email'
         ] , 201);
+    }
+
+    public function checkTokenExist(){
+        $id = JWTAuth::user()->id;
+
+        $findToken = Token::where('user_id' , $id)->first();
+        if(is_null($findToken)){
+            $token = new Token();
+            $token->user_id = $id;
+            $token->code = $this->generateVerificationCode();
+            $token->status = 0;
+            $token->expires_in = Carbon::now()->addMinutes(10);
+            $token->new_code_date = Carbon::now()->addMinutes(2);
+            $token->save();
+        }else{
+            Token::where('user_id' , $id)->delete();
+            $token = new Token();
+            $token->user_id = $id;
+            $token->code = $this->generateVerificationCode() ;
+            $token->status = 0;
+            $token->status = 0;
+            $token->expires_in = Carbon::now()->addMinutes(10);
+            $token->new_code_date = Carbon::now()->addMinutes(2);
+            $token->save();
+        }
     }
 
     public function generateVerificationCode($length = 6) {
@@ -39,32 +73,13 @@ class EmailVerifyController extends Controller
             $code .= $characters[rand(0, $charactersLength - 1)];
         }
 
-        $findToken = Token::where('user_id' , JWTAuth::user()->id)->first();
-        if(is_null($findToken)){
-            $token = new Token();
-            $token->user_id = JWTAuth::user()->id;
-            $token->code = $code;
-            $token->status = 0;
-            $token->save();
-        }else{
-            $findToken = Token::where('user_id' , JWTAuth::user()->id)->delete();
-            $token = new Token();
-            $token->user_id = JWTAuth::user()->id;
-            $token->code = $code;
-            $token->status = 0;
-            $token->save();
-            $this->deleteToken();
-        }
         return $code;
     }
 
-    public function deleteToken(){
-        $token = Token::where('created_at', '<', Carbon::now()->subDays(2))->delete;
-    }
 
     public function emailVerify(Request $request){
         $data = $request->validate([
-            'code' => 'required|size:10|numeric',
+            'code' => 'required|numeric',
         ]);
         $interedCode = (int)$data['code'];//convert code from string to integer
 
@@ -74,6 +89,7 @@ class EmailVerifyController extends Controller
         $new_code_time = (int)$userCode->new_code_time; //get delay time for new activation code request
         $now = Carbon::now()->timestamp;
 
+//        dd(['expire :'.$expires_in , 'now :'.$now , 'created: '.$userCode->created_at]);
         if($interedCode == $activationCode) {
             if ($now < $expires_in) {
                 if ($now > $new_code_time) {

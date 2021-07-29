@@ -26,8 +26,8 @@ class CreateCategoriesTable extends Migration
 
             $table->foreign('parent_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));        });
+            $table->timestamp('created_at')->useCurrent();
+        });
     }
 
     /**

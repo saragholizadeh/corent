@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Api\Main\HomePageController;
 use Illuminate\Support\Facades\Route;
 
 //Admin panel controllers
@@ -9,53 +8,52 @@ use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\PlanController;
 use App\Http\Controllers\Api\Admin\PostController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Http\Controllers\Api\Main\GetTagController;
 use App\Http\Controllers\Api\Admin\ProductController;
-use App\Http\Controllers\Api\Main\AnalysisController;
-use App\Http\Controllers\Api\Main\CommentController ;
-use App\Http\Controllers\Api\Main\PostLikeController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\RegulationController;
-use App\Http\Controllers\Api\Main\CommentLikeController;
-use App\Http\Controllers\Api\Main\FundamentalController;
-
-//Client-side controllers
-use App\Http\Controllers\Api\Main\PostDetailsController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
-use App\Http\Controllers\Api\Main\AnalysisLikeController;
 use App\Http\Controllers\Api\Admin\AdminCommentController;
 use App\Http\Controllers\Api\Admin\AdminAnalysisController;
+use App\Http\Controllers\Api\Admin\UserFormRequestController;
+use App\Http\Controllers\Api\Admin\Auth\ForgetPasswordController;
+use App\Http\Controllers\Api\Admin\Auth\EmailVerifyController;
+
+
+//Client-side controllers
+use App\Http\Controllers\Api\Main\CommentLikeController;
+use App\Http\Controllers\Api\Main\FundamentalController;
+use App\Http\Controllers\Api\Main\AnalysisController;
+use App\Http\Controllers\Api\Main\CommentController ;
+use App\Http\Controllers\Api\Main\PostLikeController;
+use App\Http\Controllers\Api\Main\GetTagController;
+use App\Http\Controllers\Api\Main\PostDetailsController;
+use App\Http\Controllers\Api\Main\SubCategoryDetailsController;
+use App\Http\Controllers\Api\Main\AnalysisLikeController;
 use App\Http\Controllers\Api\Main\ProductDetailsController;
 use App\Http\Controllers\Api\Main\AnalysisCommentController;
 use App\Http\Controllers\Api\Main\CategoryDetailsController;
 use App\Http\Controllers\Api\Main\FundamentalLikeController;
 use App\Http\Controllers\Api\Main\UserPanel\PanelController;
-use App\Http\Controllers\Api\Stack\Main\StackHomeController;
-use App\Http\Controllers\Api\Admin\UserFormRequestController;
-use App\Http\Controllers\Api\Admin\Auth\EmailVerifyController;
 use App\Http\Controllers\Api\Main\RegulationDetailsController;
-use App\Http\Controllers\Api\Stack\Admin\StackCheckController;
-use App\Http\Controllers\Api\Admin\Auth\ForgetPasswordController;
+use App\Http\Controllers\Api\Main\UserPanel\RequestFormController;
 
 //Stack client-side controllers
-use App\Http\Controllers\Api\Main\SubCategoryDetailsController;
+use App\Http\Controllers\Api\Stack\Main\StackHomeController;
 use App\Http\Controllers\Api\Stack\Main\StackCommentController;
-use App\Http\Controllers\Api\Admin\Auth\PasswordResetController;
-use App\Http\Controllers\Api\Stack\Admin\StackApproveController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionController;
-use App\Http\Controllers\Api\Admin\Auth\ChangePasswordController;
-use App\Http\Controllers\Api\Stack\Admin\StackCategoryController;
 use App\Http\Controllers\Api\Stack\Main\StackUserPanelController;
-
-//Stack admin controllers
-use App\Http\Controllers\Api\Main\UserPanel\RequestFormController;
-use App\Http\Controllers\Api\Stack\Admin\StackDashboardController;
 use App\Http\Controllers\Api\Stack\Main\StackCommentLikeController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionLikeController;
 use App\Http\Controllers\Api\Stack\Main\StackApproveAnswerController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionCategoryController;
+
+
+//Stack admin controllers
+use App\Http\Controllers\Api\Stack\Admin\StackApproveController;
+use App\Http\Controllers\Api\Stack\Admin\StackCategoryController;
+use App\Http\Controllers\Api\Stack\Admin\StackDashboardController;
+use App\Http\Controllers\Api\Stack\Admin\StackCheckController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +73,6 @@ Route::fallback(function(){
 });
 
 
-
 Route::group([
     'middleware' => 'api',
 
@@ -86,11 +83,12 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
 
 
-    Route::get('/sendNotification' , [EmailVerifyController::class , 'sendNotification']);
-    Route::post('/emailVerify' , [EmailVerifyController::class , 'emailVerify'])->middleware('auth');
+    Route::get('/sendNotification' , [EmailVerifyController::class , 'sendNotification'])->middleware('auth');// send verification notification
+    Route::post('/emailVerify' , [EmailVerifyController::class , 'emailVerify'])->middleware('auth');//verify user email
 
-    Route::post('/forgetPassword' , [ForgetPasswordController::class , 'sendEmail']);
-
+    //these routes can be used
+    Route::post('/forgotPassword' , [ForgetPasswordController::class , 'sendEmail']);
+    Route::post('/changePassword' , [ForgetPasswordController::class , 'changePassword']);
 
 });
 
@@ -247,6 +245,7 @@ Route::group([
             Route::post('dislike/analysis/{id}', [AnalysisLikeController::class , 'addDislike']);
 
         });
+        Route::get('Home' , [HomePageController::class , 'index']);
 
         //get all analyses and show analysis
         Route::get('analysis/{id}' , [AnalysisController::class , 'show' ]);

@@ -30,7 +30,10 @@ class CreateFundamentalsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->softDeletes();
-            $table->string('created_at')->default(Carbon::now()->timestamp);        });
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+
+        });
     }
 
     /**

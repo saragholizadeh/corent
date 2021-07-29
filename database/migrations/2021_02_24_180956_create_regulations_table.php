@@ -47,8 +47,7 @@ class CreateRegulationsTable extends Migration
             $table->string('crpto_antimon_rules')
             ->comment('has Anti-money laundering rules for crypto or not');
 
-            $table->string('created_at')->default(Carbon::now()->timestamp);
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

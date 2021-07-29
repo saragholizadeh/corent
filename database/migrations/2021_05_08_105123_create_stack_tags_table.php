@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Carbon\Carbon;
 
 class CreateStackTagsTable extends Migration
 {
@@ -19,7 +17,8 @@ class CreateStackTagsTable extends Migration
             $table->id();
             $table->string('tag');
             $table->integer('count')->nullable();
-            $table->string('created_at')->default(Carbon::now()->timestamp);        });
+            $table->timestamp('created_at')->useCurrent();
+        });
     }
 
     /**

@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Carbon\Carbon;
 
 class CreateStackTaggablesTable extends Migration
 {
@@ -20,7 +18,8 @@ class CreateStackTaggablesTable extends Migration
             $table->bigInteger('stack_tag_id');
             $table->integer('stack_taggable_id');
             $table->string('stack_taggable_type');
-            $table->string('created_at')->default(Carbon::now()->timestamp);        });
+            $table->timestamp('created_at')->useCurrent();
+        });
     }
 
     /**

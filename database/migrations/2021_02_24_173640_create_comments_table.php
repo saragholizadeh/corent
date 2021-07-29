@@ -31,8 +31,7 @@ class CreateCommentsTable extends Migration
 
             $table->foreign('parent_id')->references('id')->on('comments')->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
-            $table->string('created_at')->default(Carbon::now()->timestamp);
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

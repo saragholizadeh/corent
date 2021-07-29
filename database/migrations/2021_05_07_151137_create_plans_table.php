@@ -25,7 +25,7 @@ class CreatePlansTable extends Migration
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
-            $table->string('created_at')->default(Carbon::now()->timestamp);
+            $table->timestamp('created_at')->useCurrent();
 
 
         });

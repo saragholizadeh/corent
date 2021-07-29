@@ -20,7 +20,7 @@ class CreateStackCategoriesTable extends Migration
 
             $table->string('title');
 
-            $table->string('created_at')->default(Carbon::now()->timestamp);
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

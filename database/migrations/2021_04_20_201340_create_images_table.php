@@ -23,8 +23,7 @@ class CreateImagesTable extends Migration
             $table->string('image');
             $table->string('path');
 
-            $table->string('created_at')->default(Carbon::now()->timestamp);
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

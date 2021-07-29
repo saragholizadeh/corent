@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration
             $table->tinyInteger('status')->default(1);
 
             $table->softDeletes();
-            $table->string('created_at')->default(Carbon::now()->timestamp);
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
