@@ -17,12 +17,12 @@ class StackComment extends Model
         'user_id',
         'likes',
         'dislikes',
-
      ];
 
-     protected $hidden = [
-        'updated_at',
-     ];
+    protected $casts=[
+        'created_at'=>'timestamp'
+    ];
+
 
 
     public function commentable(){

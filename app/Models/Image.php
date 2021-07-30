@@ -13,12 +13,9 @@ class Image extends Model
         'image' , 'path'
     ];
 
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'status',
+    protected $casts=[
+        'created_at'=>'timestamp'
     ];
-
 
     public function imageable(){
 

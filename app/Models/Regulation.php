@@ -32,11 +32,9 @@ class Regulation extends Model
         'crpto_antimon_rules',
     ];
 
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'status',
 
+    protected $casts=[
+        'created_at'=>'timestamp'
     ];
 
     public function user(){

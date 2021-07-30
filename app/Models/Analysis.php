@@ -31,8 +31,9 @@ class Analysis extends Model implements Viewable
         'dislikes',
     ];
 
-    protected $hidden = [
-        'deleted_at',
+    protected $casts=[
+        'created_at'=>'timestamp',
+        'updated_at'=>'timestamp',
     ];
 
 

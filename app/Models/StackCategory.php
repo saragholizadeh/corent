@@ -13,12 +13,12 @@ class StackCategory extends Model
         'title' ,
    ];
 
-   protected $hidden = [
-    'created_at',
-    'updated_at',
-];
+    protected $casts=[
+        'created_at'=>'timestamp'
+    ];
 
-   public function questions(){
+
+    public function questions(){
        return $this->hasMany(StackQuestion::class);
    }
 }

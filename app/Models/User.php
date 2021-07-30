@@ -16,6 +16,8 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
     use HasFactory ;
     use Notifiable;
 
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,7 +45,6 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
         'email_verified_at',
         'deleted_at',
         'updated_at',
-        'remember_token',
     ];
 
     /**
@@ -52,7 +53,9 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'timestamp',
+        'created_at'=>'timestamp',
+        'updated_at'=>'timestamp',
     ];
 
 

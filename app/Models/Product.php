@@ -13,13 +13,12 @@ class Product extends Model
         'title',
         'description',
    ];
+    protected $casts=[
+        'created_at'=>'timestamp'
+    ];
 
-   protected $hidden = [
-    'created_at',
-    'updated_at',
-];
 
-   public function plans(){
+    public function plans(){
        return $this->hasMany(Plan::class);
    }
 

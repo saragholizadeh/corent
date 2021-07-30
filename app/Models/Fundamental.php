@@ -15,6 +15,7 @@ class Fundamental extends Model
 
     protected $casts = [
         'type'=>'array',
+        'created_at'=>'timestamp',
     ];
 
 

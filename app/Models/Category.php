@@ -18,9 +18,10 @@ class Category extends Model
          'description',
          'status' ,
     ];
-    protected $hidden = [
-        'created_at',
+    protected $casts=[
+        'created_at'=>'timestamp'
     ];
+
 
     public function parent(){
     return $this->belongsTo(Category::class );

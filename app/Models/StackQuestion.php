@@ -27,9 +27,10 @@ class StackQuestion extends Model implements Viewable
         'dislikes',
      ];
 
-     protected $hidden = [
-        'updated_at',
-    ];
+     protected $casts=[
+         'created_at'=>'timestamp',
+         'update_at'=>'timestamp'
+     ];
 
 
 

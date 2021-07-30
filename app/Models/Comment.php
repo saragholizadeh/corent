@@ -30,11 +30,14 @@ class Comment extends Model
         'image',
         'commentable_type',
         "commentable_id",
+    ];
 
+    protected $casts=[
+        'created_at'=>'timestamp'
     ];
 
 
-   public function commentable(){
+    public function commentable(){
        return $this->morphTo();
 
    }

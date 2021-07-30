@@ -10,6 +10,10 @@ class Urequest extends Model
     use HasFactory;
     public $timestamps = false;
 
+    protected $casts = [
+        'created_at'=>'timestamp',
+    ];
+
     protected $fillable  = [
         'experience',
         'user_id',

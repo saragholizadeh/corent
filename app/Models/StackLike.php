@@ -11,7 +11,6 @@ class StackLike extends Model
     public $timestamps = false;
 
 
-
     public function likeable(){
 
         return $this->morphTo();

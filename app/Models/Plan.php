@@ -15,12 +15,10 @@ class Plan extends Model
         'price',
         'product_id',
     ];
-
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        
+    protected $casts=[
+        'created_at'=>'timestamp'
     ];
+
 
     public function product(){
         return $this->belongsTo(Product::class , 'product_id');

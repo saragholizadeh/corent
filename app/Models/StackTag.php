@@ -13,6 +13,7 @@ class StackTag extends Model
 
     protected $casts = [
         'tag' => 'array',
+        'created_at'=>'timestamp',
     ];
 
     public function questions()
