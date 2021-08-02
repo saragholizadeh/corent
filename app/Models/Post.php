@@ -14,6 +14,8 @@ class Post extends Model implements Viewable
     use \Conner\Tagging\Taggable;
     use InteractsWithViews;
 
+    public $timestamps = false;
+
     protected $casts=[
         'created_at'=>'timestamp',
         'updated_at'=>'timestamp'

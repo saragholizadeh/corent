@@ -10,8 +10,6 @@ class Like extends Model
     use HasFactory;
     public $timestamps = false;
 
-
-
     public function likeable(){
 
         return $this->morphTo();

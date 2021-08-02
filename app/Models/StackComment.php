@@ -11,6 +11,8 @@ class StackComment extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'comment',
         'title',

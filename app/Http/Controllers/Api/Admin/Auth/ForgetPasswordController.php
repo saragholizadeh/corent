@@ -64,7 +64,7 @@ class ForgetPasswordController extends Controller
             User::where('email' , $request->email)->update(['password' => Hash::make($request->password)]);
             DB::table('password_resets')->where(['email'=> $request->email])->delete();
 
-            return response()->json('your password updated successfully' , 200);
+            return response()->json('رمز عبور شما با موفقیت تغییر کرد' , 200);
         }
     }
 

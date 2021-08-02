@@ -16,6 +16,8 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
     use HasFactory ;
     use Notifiable;
 
+    public $timestamps = false;
+
 
 
     /**

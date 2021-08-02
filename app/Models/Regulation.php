@@ -11,6 +11,8 @@ class Regulation extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'country' ,
         'short_description' ,

@@ -11,7 +11,7 @@ class SubCategoryDetailsController extends Controller
     public function show($id){
 
         //get subcategory data
-        $subcategory = Category::with('posts')->where('title',)->find($id);
+        $subcategory = Category::with('posts')->where('title')->find($id);
 
         return response()->json([
             'subcategoy'=>$subcategory,

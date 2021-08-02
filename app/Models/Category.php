@@ -33,12 +33,8 @@ class Category extends Model
     }
 
     public function posts(){
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Post::class );
     }
-
-    // public function postsOfCategory(){
-    //     return $this->hasManyThrough(Post::class , 'category_id');
-    // }
 
 
 }

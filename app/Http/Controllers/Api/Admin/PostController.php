@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
 use App\Http\Resources\Post as PostResources;
 use App\Http\Requests\StorePostRequest;
 use Illuminate\Support\Facades\Storage;
@@ -20,11 +19,9 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-
         $sortColumn = $request->input('sort' , 'created_at');
         $sortDirection = Str::startsWith($sortColumn, '-') ? 'desc' : 'asc' ;
         $sortColumn = ltrim($sortColumn , '-');
@@ -36,8 +33,6 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StorePostRequest $request){
 
@@ -47,7 +42,6 @@ class PostController extends Controller
 
         $validatedData['user_id'] = $user_id;
 
-
         if ($request->hasfile('image')) {
 
             $files = $request->file('image');//getting post images from request
@@ -56,9 +50,8 @@ class PostController extends Controller
             foreach ($files as $file) {
                 $imageName = time().rand(1, 10000).'.'.$file->extension();
                 $postTitle = $request->title; //post title for folder name and the images inside it
-                $imagePath = public_path(). '/images/posts/'.$postTitle;
-                $file->move($imagePath, $imageName);
-
+                $imagePath = $file->store('images/posts/'.$postTitle, 'public');
+                Storage::disk('public')->url($imagePath);
                 $image = new Image;
                 $image->image = $imageName;
                 $image->path = $imagePath;
@@ -70,25 +63,27 @@ class PostController extends Controller
         $post = new PostResources (Post::create($validatedData));
 
         if($files != NULL ){
-        $post->images()->saveMany($images);//save imageas in image table
+        $post->images()->saveMany($images);//save images in image table
         };
 
     	$tags = explode(",", $request->tags);//separate tags
 
         $post->tag($tags);//save tags in tags table
 
+
+//        $imageShow = Image::where('imageable_type' , 'App\Models\Post')->where('imageable_id' , $post->id)->get();
+
+
         return response()->json([
-        "success" => true,
-        "message" => "با موفقیت ثبت گردید",
-        "data" => $post
-        ]);
+        'message'=>'created successfully',
+            'post'=>$post,
+            'images'=>$images,
+        ] , 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -105,9 +100,6 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(StorePostRequest $request , $id )
     {
@@ -139,9 +131,8 @@ class PostController extends Controller
                 $imageName = time().rand(1,10000).'.'.$file->extension();
 
                 $postTitle = $request->title; //post title for folder name and the images inside it
-                $imagePath = public_path(). '/images/posts/'.$postTitle;
-
-                $file->move($imagePath, $imageName);
+                $imagePath = $file->store('images/posts/'.$postTitle, 'public');
+                Storage::disk('public')->url($imagePath);
 
                 $image = new Image;
                 $image->image = $imageName;
@@ -161,10 +152,7 @@ class PostController extends Controller
 
         $post->save();
 
-
         $post->images()->saveMany($images);
-
-
 
         $post->retag($tags); // delete current tags and save new tags
         $post->tag($tags);
@@ -180,8 +168,6 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

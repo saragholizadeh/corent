@@ -18,6 +18,8 @@ class StackQuestion extends Model implements Viewable
     use HasFactory;
     use InteractsWithViews;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'title',
         'body' ,

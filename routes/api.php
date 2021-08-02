@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Main\HomePageController;
+use App\Http\Controllers\Api\Main\NavBarController;
 use Illuminate\Support\Facades\Route;
 
 //Admin panel controllers
@@ -246,6 +247,11 @@ Route::group([
 
         });
         Route::get('Home' , [HomePageController::class , 'index']);
+
+        Route::get('nav' , [NavBarController::class , 'index']);
+        Route::get('navSubCategories/{id}' , [NavBarController::class , 'showSubCategories']);
+
+        Route::get('lastNews' , [HomePageController::class , 'lastNews']);
 
         //get all analyses and show analysis
         Route::get('analysis/{id}' , [AnalysisController::class , 'show' ]);

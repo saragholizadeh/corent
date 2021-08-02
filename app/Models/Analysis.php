@@ -17,6 +17,7 @@ class Analysis extends Model implements Viewable
     use \Conner\Tagging\Taggable;
     use InteractsWithViews;
 
+    public $timestamps = false;
 
     protected $fillable = [
         'title' ,
