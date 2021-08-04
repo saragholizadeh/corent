@@ -21,21 +21,23 @@ class StackQuestion extends JsonResource
           $user_id = User::where('id' , $questionUserId)->first();
           $user_name = $user_id->name;
 
-
            //get category title for category_id field in question
-           $postQuestionId = $this->category_id;
-           $category_id = Category::where('id' , $postQuestionId)->first();
+           $questionCategoryID = $this->category_id;
+           $category_id = Category::where('id' , $questionCategoryID)->first();
            $category_title = $category_id->title ;
+
 
         return [
             'id'=>$this->id,
-            'user'=>$this->$user_name,
-            'category'=>$this->$category_title,
+            'user'=> $user_name,
+            'category'=> $category_title,
             'title'=>$this->title,
             'body'=>$this->body,
             'likes'=>$this->likes,
             'dislikes'=>$this->dislikes,
             'created_at'=>$this->created_at,
+            'tags'=>StackTag::collection($this->tags)->pluck('tag'),
+            'images'=>Image::collection($this->images)->pluck('path'),
         ];
     }
 }

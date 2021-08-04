@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentCollection extends ResourceCollection
+class StackTag extends JsonResource
 {
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
@@ -15,7 +15,7 @@ class CommentCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data'=>$this->collection,
+            'tag'=>$this->tag,
         ];
     }
 }

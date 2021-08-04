@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Api\Stack\Main;
 
+use App\Http\Resources\StackCommentCollection;
+use App\Models\StackComment;
 use App\Models\User;
 use App\Models\Image;
 use App\Models\StackTag;
-use App\Models\StackWallet;
-use Illuminate\Http\Request;
 use App\Models\StackQuestion;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStackQuestionRequest;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\StackQuestion as StackQuestionResources;
+
 
 class StackQuestionController extends Controller
 {
@@ -38,12 +39,8 @@ class StackQuestionController extends Controller
         if ($request->hasfile('image')) {
             foreach ($files as $file) {
                 $imageName = time().rand(1, 10000).'.'.$file->extension();
-
-                $questionId = $request->title; //post title for folder name and the images inside it
-                $imagePath = public_path(). '/images/stack/questions'.$questionId;
-
-
-                $file->move($imagePath, $imageName);
+                $imagePath = $file->store('images/stack/questions/', 'public');
+                Storage::disk('public')->url($imagePath);
 
                 $image = new Image;
                 $image->image = $imageName;
@@ -56,10 +53,98 @@ class StackQuestionController extends Controller
         $question = StackQuestion::create($validatedData); //save question
 
         if ($files != null) {
-            $question->images()->saveMany($images);//save imageas
+            $question->images()->saveMany($images);//save images
+        }else{
+            $images = 'no image';
         }
 
+        //store tags
+        $tagNames = explode(",", $request->tag);//separate tags
+        $tagIds = [];
+
+        foreach($tagNames as $tagName){
+            $tag = StackTag::firstOrCreate(['tag'=>$tagName]);
+            if($tag){
+              $tagIds[] = $tag->id;
+            }
+        }
+        $question->tags()->sync($tagIds);
+
+        $this->userLevel();
+
+        return response()->json([
+            'success'=>true,
+            'message'=> 'با موفقیت ثبت شد',
+            'question'=>$question,
+            'tags'=>$tagNames,
+            'image'=>$images,
+        ]);
+    }
+
+    public function update(StoreStackQuestionRequest $request , $id){
+
+        $question = StackQuestion::find($id);
+        if (!$question) {
+            return response()->json(' سوال  مورد نظر یافت نشد', 404);
+        }
+
+        $validateData = $request->all();
+
+        $user_id = JWTAuth::user()->id;
+
+        $validatedData['user_id'] = $user_id;
+
+        $files = $request->file('image');//getting post images from request
+
+        if ($request->hasfile('image')) {
+
+            $questionId = $request->title; //post title for folder name and the images inside it
+
+            //delete last Images from database for updating images
+            Image::where('imageable_type', 'App\Models\StackQuestion')->where('imageable_id', $id)->delete();
+
+            //saving name and path of images
+            foreach ($files as $file) {
+                $imageName = time().rand(1, 10000).'.'.$file->extension();
+                $imagePath = $file->store('images/question/', 'public');
+                Storage::disk('public')->url($imagePath);
+                $image = new Image;
+                $image->image = $imageName;
+                $image->path = $imagePath;
+
+                $images[] = $image; // make an array of uploaded images
+            }
+        }
+
+            $question->title = $validateData['title'];
+            $question->body = $validateData['body'];
+            $question->category_id = $validateData['category_id'];
+            $question->update();
+
+
+            $tagNames = explode(",", $request->tag);//separate tags
+
+            $tagIds = [];
+
+            foreach ($tagNames as $tagName) {
+                $tag = StackTag::firstOrCreate(['tag'=>$tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }
+
+        $question->tags()->sync($tagIds);
+        return response()->json([
+            'success'=>true,
+            'data'=>$question,
+            'message'=>'با موفقیت ویرایش گردید',
+        ]);
+    }
+    public function userLevel(){
         //update user stars and change level
+
+        $user_id = JWTAuth::user()->id;
+
         $user = User::find($user_id);
         $stars = $user->stars+2;
         $level = $user->stack_level;
@@ -94,108 +179,35 @@ class StackQuestionController extends Controller
             $user->stack_level = $level;
             $user->update();
         }
-         else {
+        else {
             $level = 'master';
             $user->stack_level = $level;
             $user->update();
         }
-
-        //store tags
-        $tagNames = explode(",", $request->tag);//separate tags
-        $tagIds = [];
-
-        foreach($tagNames as $tagName){
-            $tag = StackTag::firstOrCreate(['tag'=>$tagName]);
-            if($tag){
-              $tagIds[] = $tag->id;
-            }
-        }
-        $question->tags()->sync($tagIds);
-
-        return response()->json([
-            'success'=>true,
-            'message'=> 'با موفقیت ثبت شد',
-            'data'=>[$images ,$question]
-        ]);
-    }
-
-    public function update(StoreStackQuestionRequest $request , $id){
-
-        $question = StackQuestion::find($id);
-        if (!$question) {
-            return response()->json(' سوال  مورد نظر یافت نشد', 404);
-        }
-
-        $validateData = $request->all();
-
-        $user_id = JWTAuth::user()->id;
-
-        $validatedData['user_id'] = $user_id;
-
-        $files = $request->file('image');//getting post images from request
-
-        if ($request->hasfile('image')) {
-
-            $questionId = $request->title; //post title for folder name and the images inside it
-
-            //delete last Images from database for updating images
-            Image::where('imageable_type', 'App\Models\StackQuestion')->where('imageable_id', $id)->delete();
-
-            //saving name and path of images
-            foreach ($files as $file) {
-                $imageName = time().rand(1, 10000).'.'.$file->extension();
-                $imagePath = public_path(). '/images/stack/questions'.$questionId;
-
-                $file->move($imagePath, $imageName);
-
-                $image = new Image;
-                $image->image = $imageName;
-                $image->path = $imagePath;
-
-                $images[] = $image; // make an array of uploaded images
-            }
-        }
-
-            $question->title = $validateData['title'];
-            $question->body = $validateData['body'];
-            $question->category_id = $validateData['category_id'];
-            $question->update();
-
-
-            $tagNames = explode(",", $request->tag);//separate tags
-
-            $tagIds = [];
-
-            foreach ($tagNames as $tagName) {
-                $tag = StackTag::firstOrCreate(['tag'=>$tagName]);
-                if ($tag) {
-                    $tagIds[] = $tag->id;
-                }
-            }
-            dd($tagIds);
-
-        $question->tags()->sync($tagIds);
-        return response()->json([
-            'success'=>true,
-            'data'=>$question,
-            'message'=>'با موفقیت ویرایش گردید',
-        ]);
     }
 
     public function show($id){
+        $questionFind=StackQuestion::find($id);
+        if(is_null($questionFind)){
+            return response()->json('سوال مورد نظر یافت نشد' , 404);
+        }
+        $question = new StackQuestionResources (StackQuestion::find($id));
 
-        $question = StackQuestion::with('comments.replies' , 'tags')->find($id);
+        $comments =new StackCommentCollection(
+            StackComment::where('commentable_id' , $id)
+            ->where('commentable_type','App\Models\StackQuestion')
+            ->with('replies')
+            ->get()
+        );
 
-        $images = Image::where('imageable_type', 'App\Models\StackQuestion')->where('imageable_id', $id)->get();
-
-        views($question)->record();
-        $views = views($question)->count();
+        views($questionFind)->record();
+        $views = views($questionFind)->count();
 
         return response()->json([
-           '$question'=> $question,
-            'question views'=>$views,
-            'images'=>$images,
-        ]);
+           'question'=> $question,
+            'question_views'=>$views,
+            'comments'=>$comments,
+        ],200);
     }
 
     public function destroy($id)
@@ -213,4 +225,5 @@ class StackQuestionController extends Controller
             "data" => $question
             ]);
     }
+
 }

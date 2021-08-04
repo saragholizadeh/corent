@@ -2,12 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Image;
-use App\Models\StackTag;
-use App\Models\StackLike;
-use App\Models\StackComment;
-use App\Models\StackDislike;
-use App\Models\StackCategory;
+
 use Illuminate\Database\Eloquent\Model;
 use CyrildeWit\EloquentViewable\Contracts\Viewable;
 use CyrildeWit\EloquentViewable\InteractsWithViews;
@@ -31,7 +26,7 @@ class StackQuestion extends Model implements Viewable
 
      protected $casts=[
          'created_at'=>'timestamp',
-         'update_at'=>'timestamp'
+         'updated_at'=>'timestamp'
      ];
 
 
