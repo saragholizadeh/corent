@@ -17,7 +17,6 @@
         "laravel/helpers": "^1.4",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "rtconner/laravel-tagging": "^4.1",
         "tymon/jwt-auth": "^1.0",
         "ybazli/faker": "^1.0"
     },

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Image;
 use App\Models\Regulation;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -16,8 +17,6 @@ class RegulationController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
@@ -34,9 +33,6 @@ class RegulationController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreRegulationRequest $request )
     {
@@ -46,12 +42,11 @@ class RegulationController extends Controller
         $getImage = $request->image;
         $imageName = time().'.'.$getImage->extension();
         $regulationCountry = $request->country;
-        $imagePath = public_path(). '/images/regulations/'.$regulationCountry;
+        $imagePath = $getImage->store('images/regulations/'.$regulationCountry, 'public');
+        Storage::disk('public')->url($imagePath);
 
         $image->path = $imagePath;
         $image->image = $imageName;
-
-        $getImage->move($imagePath, $imageName);
 
         $regulation = Regulation::create($validatedData);
 
@@ -66,9 +61,6 @@ class RegulationController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -81,10 +73,6 @@ class RegulationController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(StoreRegulationRequest $request, $id )
     {
@@ -99,19 +87,15 @@ class RegulationController extends Controller
 
         //delete last Images from database for updating images
         Image::where('imageable_type' , 'App\Models\Regulation')->where('imageable_id' , $id)->delete();
-        //delete last images images folder
-        //File::delete(public_path('/images/regulations'));
 
         $image = new Image;
         $getImage = $request->image;
         $imageName = time().'.'.$getImage->extension();
-        $imagePath = public_path(). '/images/regulations/'.$regulationCountry;
+        $imagePath = $getImage->store('images/regulations/'.$regulationCountry, 'public');
+        Storage::disk('public')->url($imagePath);
 
         $image->path = $imagePath;
         $image->image = $imageName;
-
-        $getImage->move($imagePath, $imageName);
-
 
         $regulation = Regulation::find($id);
         $regulation->country = $validatedData['country'];
@@ -146,9 +130,6 @@ class RegulationController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

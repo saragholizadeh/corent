@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Api\Main;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
-use Conner\Tagging\Model\Tag;
+use App\Models\Tag;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostCollection;
-use Illuminate\Database\Eloquent\Builder;
 
 
 class GetTagController extends Controller

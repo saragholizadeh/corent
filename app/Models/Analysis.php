@@ -14,7 +14,6 @@ use CyrildeWit\EloquentViewable\InteractsWithViews;
 class Analysis extends Model implements Viewable
 {
     use HasFactory;
-    use \Conner\Tagging\Taggable;
     use InteractsWithViews;
 
     public $timestamps = false;
@@ -26,7 +25,6 @@ class Analysis extends Model implements Viewable
         'exchange'  ,
         'timeframe',
         'pair' ,
-        'tags',
         'user_id',
         'likes',
         'dislikes',
@@ -36,7 +34,6 @@ class Analysis extends Model implements Viewable
         'created_at'=>'timestamp',
         'updated_at'=>'timestamp',
     ];
-
 
 
     public function users(){
@@ -58,5 +55,10 @@ class Analysis extends Model implements Viewable
     public function dislikes(){
         return $this->morphMany(Dislike::class , 'dislikeable');
     }
+
+    public function tags(){
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
 
 }

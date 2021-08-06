@@ -134,10 +134,12 @@ class StackQuestionController extends Controller
             }
 
         $question->tags()->sync($tagIds);
+
         return response()->json([
             'success'=>true,
-            'data'=>$question,
             'message'=>'با موفقیت ویرایش گردید',
+            'data'=>$question,
+            'tags'=>$tagNames,
         ]);
     }
     public function userLevel(){

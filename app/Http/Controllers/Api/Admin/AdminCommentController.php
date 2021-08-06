@@ -14,8 +14,6 @@ class AdminCommentController extends Controller
 {
      /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function lastComments()
     {
@@ -50,9 +48,6 @@ class AdminCommentController extends Controller
      * approve a comment if  is inactive by admins(status=1)
      * and reject a comment if active(status=0)
      * these methods are for replies too
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function Approve($id){
         $comment = Comment::find($id);
@@ -76,9 +71,6 @@ class AdminCommentController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -93,9 +85,6 @@ class AdminCommentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

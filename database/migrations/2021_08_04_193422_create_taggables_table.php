@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateStackTagsTable extends Migration
+class CreateTaggablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateStackTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stack_tags', function (Blueprint $table) {
+        Schema::create('taggables', function (Blueprint $table) {
             $table->id();
-            $table->string('tag');
+            $table->bigInteger('tag_id');
+            $table->integer('taggable_id');
+            $table->string('taggable_type');
             $table->timestamp('created_at')->useCurrent();
         });
     }
@@ -27,6 +29,6 @@ class CreateStackTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stack_tags');
+        Schema::dropIfExists('taggables');
     }
 }

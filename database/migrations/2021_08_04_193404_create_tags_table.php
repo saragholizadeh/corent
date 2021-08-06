@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateStackTagsTable extends Migration
+class CreateTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateStackTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stack_tags', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('tag');
             $table->timestamp('created_at')->useCurrent();
@@ -27,6 +27,6 @@ class CreateStackTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stack_tags');
+        Schema::dropIfExists('tags');
     }
 }

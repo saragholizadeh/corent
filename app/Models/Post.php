@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Post extends Model implements Viewable
 {
     use HasFactory;
-    use \Conner\Tagging\Taggable;
     use InteractsWithViews;
 
     public $timestamps = false;
@@ -28,12 +27,8 @@ class Post extends Model implements Viewable
         'body' ,
         'study_time',
         'status',
-        'tags',
         'user_id',
-
     ];
-
-
 
     public function category(){
         return $this->belongsTo(Category::class , 'category_id');
@@ -58,6 +53,10 @@ class Post extends Model implements Viewable
 
     public function dislikes(){
         return $this->morphMany(Dislike::class, 'dislikeable');
+    }
+
+    public function tags(){
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 }
 

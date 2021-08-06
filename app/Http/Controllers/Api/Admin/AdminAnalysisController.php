@@ -16,8 +16,6 @@ class AdminAnalysisController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
@@ -33,9 +31,6 @@ class AdminAnalysisController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -63,9 +58,6 @@ class AdminAnalysisController extends Controller
     /**
      * approve an analysis if  is inactive by admins(status=1)
      * and reject a analysis if active(status=0)
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function Approve($id){
         $analysis = new AnalysisResources( Analysis::find($id));
@@ -89,9 +81,6 @@ class AdminAnalysisController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

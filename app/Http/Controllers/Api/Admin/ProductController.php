@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Image;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,8 +15,6 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -26,9 +25,6 @@ class ProductController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreProductRequest $request)
     {
@@ -39,13 +35,9 @@ class ProductController extends Controller
 
         $imageName = time().'.'.$getImage->extension();
         $productTitle = $request->title;
-        $imagePath = public_path(). '/images/products/'.$productTitle;
-
-        $image->path = $imagePath;
+        $imagePath = $getImage->store('images/products/'.$productTitle, 'public');
+        Storage::disk('public')->url($imagePath);
         $image->image = $imageName;
-
-
-        $getImage->move($imagePath, $imageName);
 
         $product = Product::create($validatedData);
 
@@ -59,9 +51,6 @@ class ProductController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -75,10 +64,6 @@ class ProductController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(StoreProductRequest $request, $id)
     {
@@ -91,12 +76,11 @@ class ProductController extends Controller
         $getImage = $request->image;
 
         $imageName = time().'.'.$getImage->extension();
-        $imagePath = public_path(). '/images/products/'.$productTitle;
+        $imagePath = $getImage->store('images/products/'.$productTitle, 'public');
+        Storage::disk('public')->url($imagePath);
 
         $image->path = $imagePath;
         $image->image = $imageName;
-
-        $getImage->move($imagePath, $imageName);
 
         $product = Product::find($id);
         $product->title = $validatedData['title'];
@@ -114,9 +98,6 @@ class ProductController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

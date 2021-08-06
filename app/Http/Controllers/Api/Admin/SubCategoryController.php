@@ -13,8 +13,6 @@ class SubCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
@@ -33,9 +31,6 @@ class SubCategoryController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreSubCategoryRequest $request)
     {
@@ -51,9 +46,6 @@ class SubCategoryController extends Controller
     }
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -66,10 +58,6 @@ class SubCategoryController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(StoreSubCategoryRequest $request, $id)
     {
@@ -77,7 +65,7 @@ class SubCategoryController extends Controller
         if(is_null($category_faild)){
             return response()->json('دسته بندی مورد نظر یافت نشد' , 404);
         }
-        
+
         $validatedData = $request->all();
 
         $subcategory = Category::find($id);
@@ -95,9 +83,6 @@ class SubCategoryController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

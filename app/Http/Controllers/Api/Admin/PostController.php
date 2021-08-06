@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use Fo;
+use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Image;
 use Illuminate\Support\Str;
@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Post as PostResources;
 use App\Http\Requests\StorePostRequest;
 use Illuminate\Support\Facades\Storage;
-
 
 class PostController extends Controller
 {
@@ -66,18 +65,24 @@ class PostController extends Controller
         $post->images()->saveMany($images);//save images in image table
         };
 
-    	$tags = explode(",", $request->tags);//separate tags
+        //store tags
+        $tagNames = explode(",", $request->tag);//separate tags
+        $tagIds = [];
 
-        $post->tag($tags);//save tags in tags table
-
-
-//        $imageShow = Image::where('imageable_type' , 'App\Models\Post')->where('imageable_id' , $post->id)->get();
+        foreach($tagNames as $tagName){
+            $tag = Tag::firstOrCreate(['tag'=>$tagName]);
+            if($tag){
+                $tagIds[] = $tag->id;
+            }
+        }
+        $post->tags()->sync($tagIds);
 
 
         return response()->json([
         'message'=>'created successfully',
             'post'=>$post,
             'images'=>$images,
+            'tags'=>$tagNames,
         ] , 200);
     }
 
@@ -148,20 +153,29 @@ class PostController extends Controller
         $post->title = $validatedData['title'];
         $post->body = $validatedData['body'];
         $post->study_time = $validatedData['study_time'];
-        $post->tags = $validatedData['tags'];
 
         $post->save();
 
         $post->images()->saveMany($images);
 
-        $post->retag($tags); // delete current tags and save new tags
-        $post->tag($tags);
+        $tagNames = explode(",", $request->tag);//separate tags
 
+        $tagIds = [];
+
+        foreach ($tagNames as $tagName) {
+            $tag = Tag::firstOrCreate(['tag'=>$tagName]);
+            if ($tag) {
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        $post->tags()->sync($tagIds);
 
         return response()->json([
         "success" => true,
         "message" => "با موفقیت ویرایش گردید",
-        "data" => $post
+        "data" => $post,
+        "tags"=>$tagNames
         ]);
     }
 
