@@ -32,7 +32,7 @@ class StackComment extends Model
     }
 
     public function replies(){
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->hasMany(StackComment::class, 'parent_id');
     }
 
     public function likes(){

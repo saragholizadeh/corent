@@ -87,7 +87,7 @@ class CategoryController extends Controller
 
          return response()->json([
             "message" => "دسته بندی مورد نظر با موفقیت حذف شد",
-            "data" => $category
-            ]);
+            "category" => $category
+            ],200);
     }
 }

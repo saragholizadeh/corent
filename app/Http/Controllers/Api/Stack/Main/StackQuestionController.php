@@ -196,10 +196,10 @@ class StackQuestionController extends Controller
         $question = new StackQuestionResources (StackQuestion::find($id));
 
         $comments =new StackCommentCollection(
-            StackComment::where('commentable_id' , $id)
-            ->where('commentable_type','App\Models\StackQuestion')
-            ->with('replies')
-            ->get()
+            StackComment::where('commentable_type', 'App\Models\StackQuestion')
+                ->where('commentable_id' , $id)
+                ->with('replies.replies')
+                ->get()
         );
 
         views($questionFind)->record();

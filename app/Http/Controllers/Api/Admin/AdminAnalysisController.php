@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Http\Resources\CommentCollection;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Analysis;
@@ -34,19 +35,22 @@ class AdminAnalysisController extends Controller
      */
     public function show($id)
     {
-        $analysis = Analysis::find($id);
+        $analysis = new AnalysisResources(Analysis::find($id));
 
         if (is_null($analysis)) {
             return response()->json('تحلیل مورد نظر یافت نشد', 404);
         }
 
-        //show comments of posts
+        //show comments of analysis
         $comments = Comment::where('commentable_type' , 'App\Models\Analysis')->first();
 
         if ($comments==null) {
             $comments = 'there is no comment for this Analysis yet';
         }else{
-            $comments = Comment::where('commentable_type', 'App\Models\Analysis')->with('replies.replies')->get();
+            $comments =new CommentCollection(Comment::where('commentable_type', 'App\Models\Analysis')
+                ->where('commentable_id' , $id)
+                ->with('replies.replies')
+                ->get()) ;
         }
 
         return response()->json([
@@ -65,7 +69,7 @@ class AdminAnalysisController extends Controller
         $analysis->save();
         return response()->json([
             "message" => "تایید شد",
-            "data" => $analysis
+            "analysis" => $analysis
         ] ,201);
     }
 
@@ -75,7 +79,7 @@ class AdminAnalysisController extends Controller
         $analysis->save();
         return response()->json([
             "message" => "رد شد",
-            "data" => $analysis
+            "analysis" => $analysis
         ],200) ;
     }
 

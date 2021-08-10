@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Models\Post;
 use App\Models\Comment;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-
+use App\Http\Resources\Comment as CommentResources;
 
 class AdminCommentController extends Controller
 {
@@ -29,21 +25,6 @@ class AdminCommentController extends Controller
     }
 
 
-    public function postIndex(){
-        $postComments = Comment::where('imageable_type', 'App\Models\Post')
-        ->orderBy('created_at', 'desc')
-        ->paginate(20);
-
-        return response()->json([
-            'post_comments'=>$postComments,
-        ], 200);
-    }
-
-
-    public function analysisIndex(){
-        $analysisComments = Comment::where('imageable_type', 'App\Models\Analysis')->orderBy('created_at', 'desc')->paginate(20);
-
-    }
      /**
      * approve a comment if  is inactive by admins(status=1)
      * and reject a comment if active(status=0)
@@ -55,8 +36,8 @@ class AdminCommentController extends Controller
         $comment->save();
         return response()->json([
             "message" => "تایید شد",
-            "data" => $comment
-        ]);
+            "comment" => $comment
+        ],200);
     }
 
     public function Reject($id){
@@ -65,8 +46,8 @@ class AdminCommentController extends Controller
         $comment->save();
         return response()->json([
             "message" => "رد شد",
-            "data" => $comment
-        ]);
+            "comment" => $comment
+        ],200);
     }
 
     /**
@@ -74,12 +55,14 @@ class AdminCommentController extends Controller
      */
     public function show($id)
     {
-        $comment = Comment::with('replies')->find($id);
+        $comment =new CommentResources (Comment::with('replies.replies')->find($id));
         if(is_null($comment)){
             return response()->json('کامنت مورد نظر یافت نشد' , 404);
         }
 
-        return response()->json($comment , 200);
+        return response()->json([
+           'comment' => $comment
+        ], 200);
     }
 
 
@@ -95,8 +78,7 @@ class AdminCommentController extends Controller
          $comment->delete();
 
          return response()->json([
-            "success" => true,
             "message" => "کامنت  مورد نظر با موفقیت حذف شد",
-            ]);
+            ],200);
     }
 }

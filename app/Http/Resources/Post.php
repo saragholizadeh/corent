@@ -42,8 +42,8 @@ class Post extends JsonResource
             'likes'=>$this->likes,
             'dislikes'=>$this->dislikes,
             'created_at'=>$this->created_at,
-            'tags'=>$this->tags,
-
+            'tags'=>Tag::collection($this->tags)->pluck('tag'),
+            'images'=>Image::collection($this->images)->pluck('path'),
         ];
     }
 }

@@ -18,13 +18,13 @@ class CategoryDetailsController extends Controller
             return response()->json('دسته بندی مورد نظر یافت نشد' , 404);
         }
 
-        $subCategories_id = Category::where('parent_id',$id)->get('id');
+        $subCategoriesTitle = Category::where('parent_id',$id)->pluck('title');
 
-       $posts = new PostCollection(Post::whereIn('category_id' , $subCategories_id )->orderBy('created_at', 'desc')->get());
+        $posts = new PostCollection(Post::whereIn('category_id' , $subCategories_id )->orderBy('created_at', 'desc')->get());
 
         return response()->json([
             'category'=>$category ,
-            'posts'=>$posts,
+            'subCategories_title'=>$subCategoriesTitle,
             ] , 200);
     }
 }

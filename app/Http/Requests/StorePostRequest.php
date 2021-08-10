@@ -29,7 +29,7 @@ class StorePostRequest extends FormRequest
             'category_id'=>['required' , 'integer'] ,
             'body'=>['required','string','min:300' ,new CheckBadWords()],
             'study_time'=>['required' ,'numeric'],
-            'tags'=>['required','string' ,new CheckBadWords()],
+            'tag'=>['required','string' ,new CheckBadWords()],
             'image'=>['required'],
         ];
 

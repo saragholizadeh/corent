@@ -253,19 +253,15 @@ Route::group([
 
         Route::get('lastNews' , [HomePageController::class , 'lastNews']);
 
-        //get all analyses and show analysis
-        Route::get('analysis/{id}' , [AnalysisController::class , 'show' ]);
-
-        //get last Analyses
-        Route::get('analyses' , [AnalysisController::class , 'lastAnalyses']);
-
-        Route::get('/tags/{id}' , [GetTagController::class , 'show']);//show posts related to this tag
-
         Route::get('/category/{id}' , [CategoryDetailsController::class , 'show']);//show category with subcategories and related posts
 
-        Route::get('/subcategory/{id}' , [SubCategoryDetailsController::class , 'show']);//show category with subcategories and related posts
-
         Route::get('post/{id}' , [PostDetailsController::class , 'showPost']); // show post with comments and replies and tags
+
+        Route::get('analysis/{id}' , [AnalysisController::class , 'show' ]);//get all analyses and show analysis
+
+        Route::get('analyses' , [AnalysisController::class , 'lastAnalyses']);//get last Analyses
+
+        Route::get('/tags/{id}' , [GetTagController::class , 'show']);//show posts related to this tag
 
         Route::get('regulations' , [RegulationDetailsController::class , 'index']); // show all regulation countries
         Route::get('regulation/{id}' , [RegulationDetailsController::class , 'show']); // get regulstion details

@@ -20,6 +20,7 @@ class Comment extends JsonResource
             'email'=>$this->email,
             'comment'=>$this->comment,
             'created_at'=>$this->created_at,
+            'replies'=>Comment::collection($this->replies),
         ];
     }
 }

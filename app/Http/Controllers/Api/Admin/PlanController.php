@@ -12,7 +12,9 @@ class PlanController extends Controller
 {
     public function index(){
         $plan = Plan::orderBy('created_at' , 'desc')->paginate(6);
-        return response()->json($plan);
+        return response()->json([
+          'plan'=>  $plan
+        ],200);
     }
 
     public function store(StorePlanRequest $request){
@@ -21,9 +23,8 @@ class PlanController extends Controller
         $plan = Plan::create($validateData);
 
         return response()->json([
-            'success'=>true,
-            'data'=>$plan,
-        ]);
+            'plan'=>$plan,
+        ],201);
 
     }
 
@@ -32,7 +33,6 @@ class PlanController extends Controller
         if (!$planFaild) {
             return response()->json(' پلن  مورد نظر یافت نشد', 404);
         }
-
         $validateData = $request->all();
 
         $plan = Plan::find($id);
@@ -43,9 +43,8 @@ class PlanController extends Controller
         $plan->update();
 
         return response()->json([
-            'success'=>true,
-            'data'=>$plan,
-        ]);
+            'plan'=>$plan,
+        ],200);
 
     }
 

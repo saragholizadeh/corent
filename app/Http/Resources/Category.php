@@ -31,7 +31,7 @@ class Category extends JsonResource
             'parent_category'=>$parent_name,
             'title'=>$this->title,
             'created_at'=>$this->created_at,
-            'description'=>$this->description
+            'description'=>$this->description,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Main;
 
+use App\Http\Resources\CommentCollection;
 use App\Models\Like;
 use App\Models\Image;
 use App\Models\Comment;
@@ -131,7 +132,9 @@ class AnalysisController extends Controller
         if ($comments == null) {
             $comments = 'there is no comment for this analysis yet';
         } else {
-            $comments = Comment::where('commentable_type', 'App\Models\Analysis')->with('replies.replies')->get();
+            $comments =new CommentCollection(Comment::where('commentable_type', 'App\Models\Analysis')
+                ->with('replies.replies')
+                ->get());
         }
         return response()->json([
             'analysis' => $analysis,
