@@ -253,6 +253,8 @@ Route::group([
 
         Route::get('lastNews' , [HomePageController::class , 'lastNews']);
 
+
+
         Route::get('/category/{id}' , [CategoryDetailsController::class , 'show']);//show category with subcategories and related posts
 
         Route::get('post/{id}' , [PostDetailsController::class , 'showPost']); // show post with comments and replies and tags

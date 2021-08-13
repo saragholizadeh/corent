@@ -18,12 +18,21 @@ class HomePageController extends Controller
 
         $subCategories_id = Category::where('parent_id',$categoryNewsId)->get('id');
 
-        $posts =Post::whereIn('category_id' , $subCategories_id )
+        $posts = Post::whereIn('category_id' , $subCategories_id )
             ->orderBy('created_at', 'desc')
-            ->select('title', 'body')->get();
+            ->select('title', 'body')
+            ->take(4)
+            ->get();
 
         return response()->json([
             'latest_news'=>$posts
             ], 200);
+    }
+
+    public function iranNews(){
+        $iranCategory = Category::where('title' , 'اخبار ایران')->first();
+        $iranId = $iranCategory->id;
+
+        $posts = Post::where('category_id' , $iranId)->
     }
 }
