@@ -12,7 +12,6 @@ class Tag extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'tag' => 'array',
         'created_at'=>'timestamp',
     ];
 

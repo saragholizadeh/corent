@@ -18,8 +18,6 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
 
     public $timestamps = false;
 
-
-
     /**
      * The attributes that are mass assignable.
      *
@@ -104,5 +102,11 @@ class User extends Authenticatable implements JWTSubject  , MustVerifyEmail
     public function token(){
         return $this->hasOne(Token::class);
     }
+    public function questions(){
+        return $this->hasMany(StackQuestion::class);
+    }
 
+    public function answers(){
+        return $this->hasMany(StackAnswer::class);
+    }
 }

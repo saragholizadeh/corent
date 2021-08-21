@@ -96,9 +96,21 @@ class AnalysisController extends Controller
         $tagIds = [];
 
         foreach ($tagNames as $tagName) {
-            $tag = Tag::firstOrCreate(['tag' => $tagName]);
-            if ($tag) {
-                $tagIds[] = $tag->id;
+            $findTag =Tag::where('tag' , $tagName)->first();
+            if($findTag == NULL){
+
+                $tag = Tag::firstOrCreate(['tag' => $tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }else{
+                $tag = Tag::where('tag' , $tagName)->first();
+                $tag->count = $tag->count + 1;
+                $tag->save();
+
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
             }
         }
         $analysis->tags()->sync($tagIds);
@@ -191,15 +203,30 @@ class AnalysisController extends Controller
         $analysis->save();
 
         //update tags
+        //store tags
         $tagNames = explode(",", $request->tag);//separate tags
         $tagIds = [];
+
         foreach ($tagNames as $tagName) {
-            $tag = Tag::firstOrCreate(['tag'=>$tagName]);
-            if ($tag) {
-                $tagIds[] = $tag->id;
+            $findTag =Tag::where('tag' , $tagName)->first();
+            if($findTag == NULL){
+
+                $tag = Tag::firstOrCreate(['tag' => $tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }else{
+                $tag = Tag::where('tag' , $tagName)->first();
+                $tag->count = $tag->count + 1;
+                $tag->save();
+
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
             }
         }
         $analysis->tags()->sync($tagIds);
+
 
         //update images
         $analysis->images()->saveMany($images);

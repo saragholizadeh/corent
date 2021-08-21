@@ -5,8 +5,6 @@ namespace App\Http\Resources;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Resources\Json\JsonResource;
-use CyrildeWit\EloquentViewable\Contracts\Viewable;
-use CyrildeWit\EloquentViewable\InteractsWithViews;
 
 
 class Post extends JsonResource
@@ -46,4 +44,5 @@ class Post extends JsonResource
             'images'=>Image::collection($this->images)->pluck('path'),
         ];
     }
+
 }
