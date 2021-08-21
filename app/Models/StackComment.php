@@ -15,7 +15,6 @@ class StackComment extends Model
 
     protected $fillable = [
         'comment',
-        'title',
         'user_id',
         'likes',
         'dislikes',
@@ -24,8 +23,6 @@ class StackComment extends Model
     protected $casts=[
         'created_at'=>'timestamp'
     ];
-
-
 
     public function commentable(){
         return $this->morphTo();

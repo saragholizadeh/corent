@@ -16,6 +16,7 @@ class CreateStackTagsTable extends Migration
         Schema::create('stack_tags', function (Blueprint $table) {
             $table->id();
             $table->string('tag');
+            $table->integer('count')->default(1);
             $table->timestamp('created_at')->useCurrent();
         });
     }

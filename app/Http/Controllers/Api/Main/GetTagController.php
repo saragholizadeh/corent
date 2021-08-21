@@ -10,13 +10,12 @@ use App\Http\Resources\PostCollection;
 
 class GetTagController extends Controller
 {
-    public function show($id){
+    public function show($tag){
+       $tag = Tag::where('tag' , $tag)->first();
+       $posts = $tag->posts;
 
-        $tag = Tag::find($id);
-        $tagName = $tag->name ;
 
-        $post = new PostCollection (Post::withAllTags($tagName)->get());
 
-        return response()->json([$post]);
+       return response()->json($tag);
     }
 }

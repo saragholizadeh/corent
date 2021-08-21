@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\Admin\PostController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\CategoryController;
-use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\RegulationController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\AdminCommentController;
@@ -29,7 +28,6 @@ use App\Http\Controllers\Api\Main\CommentController ;
 use App\Http\Controllers\Api\Main\PostLikeController;
 use App\Http\Controllers\Api\Main\GetTagController;
 use App\Http\Controllers\Api\Main\PostDetailsController;
-use App\Http\Controllers\Api\Main\SubCategoryDetailsController;
 use App\Http\Controllers\Api\Main\AnalysisLikeController;
 use App\Http\Controllers\Api\Main\ProductDetailsController;
 use App\Http\Controllers\Api\Main\AnalysisCommentController;
@@ -101,7 +99,7 @@ Route::group([
 */
 Route::group([
 
-    'middleware'=>'verified',
+    'middleware'=>['auth' , 'verified'],
     'prefix'=>'admin',
 
 ], function($router){
@@ -112,7 +110,6 @@ Route::group([
 
     ] , function($router){
 
-        Route::get('/' , [DashboardController::class , 'index']);
         Route::apiResource('posts' , PostController::class);
 
     });
@@ -253,7 +250,7 @@ Route::group([
 
         Route::get('lastNews' , [HomePageController::class , 'lastNews']);
 
-
+        Route::get('iranNews' , [HomePageController::class , 'iranNews']);
 
         Route::get('/category/{id}' , [CategoryDetailsController::class , 'show']);//show category with subcategories and related posts
 
@@ -263,7 +260,7 @@ Route::group([
 
         Route::get('analyses' , [AnalysisController::class , 'lastAnalyses']);//get last Analyses
 
-        Route::get('/tags/{id}' , [GetTagController::class , 'show']);//show posts related to this tag
+        Route::get('/tags/{tag}' , [GetTagController::class , 'show']);//show posts related to this tag
 
         Route::get('regulations' , [RegulationDetailsController::class , 'index']); // show all regulation countries
         Route::get('regulation/{id}' , [RegulationDetailsController::class , 'show']); // get regulstion details
@@ -370,7 +367,7 @@ Route::group([
     Route::get('/', [StackDashboardController::class  , 'index']);
     Route::delete('question/{id}' , [StackCheckController::class , 'destroyQuestion']);
     Route::delete('comment/{id}' ,[ StackCheckController::class , 'destroyComment']);
-    Route::post('banOrUnban/{id}' , [StackCheckController::class , 'banUnbanUser']);//ban if user is unbanned or unbann if user is banned
+    Route::post('banOrUnban/{id}' , [StackCheckController::class , 'banUnbanUser']);//ban if user is unbanned or unban if user is banned
 
 
     Route::apiResource('categories' , StackCategoryController::class);

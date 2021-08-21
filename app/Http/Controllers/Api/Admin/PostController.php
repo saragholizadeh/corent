@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Image;
@@ -22,11 +23,12 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-
         $validatedData = $request->all();
 
         $user_id = JWTAuth::user()->id;
         $validatedData['user_id'] = $user_id;//get id of logged in user for store user_id field in posts
+
+        $post = new PostResources (Post::create($validatedData));
 
         if ($request->hasfile('image')) {
 
@@ -35,8 +37,7 @@ class PostController extends Controller
             //saving name and path of images
             foreach ($files as $file) {
                 $imageName = time() . rand(1, 10000) . '.' . $file->extension();
-                $postTitle = $request->title; //post title for folder name and the images inside it
-                $imagePath = $file->store('images/posts/' . $postTitle, 'public');
+                $imagePath = $file->store('images/posts/'.$post->id, 'public');
                 Storage::disk('public')->url($imagePath);
                 $image = new Image;
                 $image->image = $imageName;
@@ -45,8 +46,6 @@ class PostController extends Controller
                 $images[] = $image; // make an array of uploaded images
             }
         }
-
-        $post = new PostResources (Post::create($validatedData));
 
         if ($files != NULL) {
             $post->images()->saveMany($images);//save images in image table
@@ -57,11 +56,24 @@ class PostController extends Controller
         $tagIds = [];
 
         foreach ($tagNames as $tagName) {
-            $tag = Tag::firstOrCreate(['tag' => $tagName]);
-            if ($tag) {
-                $tagIds[] = $tag->id;
+            $findTag =Tag::where('tag' , $tagName)->first();
+            if($findTag == NULL){
+
+                $tag = Tag::firstOrCreate(['tag' => $tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }else{
+                $tag = Tag::where('tag' , $tagName)->first();
+                $tag->count = $tag->count + 1;
+                $tag->save();
+
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
             }
         }
+
         $post->tags()->sync($tagIds);
 
         return response()->json([
@@ -76,11 +88,11 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post =new PostResources(Post::find($id));
-
-        if (is_null($post)) {
-            return response()->json('پست  مورد نظر یافت نشد', 404);
+        $postFind =Post::find($id);
+        if(is_null($postFind)){
+            return response()->json('پست مورد نظر یافت نشد' , 404);
         }
+        $post = new PostResources (Post::find($id));
         return response()->json([
             'post' => $post,
         ], 200);
@@ -142,17 +154,28 @@ class PostController extends Controller
 
         $post->images()->saveMany($images);
 
+        //store tags
         $tagNames = explode(",", $request->tag);//separate tags
-
         $tagIds = [];
 
         foreach ($tagNames as $tagName) {
-            $tag = Tag::firstOrCreate(['tag' => $tagName]);
-            if ($tag) {
-                $tagIds[] = $tag->id;
+            $findTag =Tag::where('tag' , $tagName)->first();
+            if($findTag == NULL){
+
+                $tag = Tag::firstOrCreate(['tag' => $tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }else{
+                $tag = Tag::where('tag' , $tagName)->first();
+                $tag->count = $tag->count + 1;
+                $tag->save();
+
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
             }
         }
-
         $post->tags()->sync($tagIds);
 
         return response()->json([

@@ -59,4 +59,9 @@ class StackQuestion extends Model implements Viewable
         return $this->morphMany(StackDislike::class, 'dislikeable');
     }
 
+
+    public function Answers(){
+        return $this->hasMany(StackAnswer::class );
+    }
+
 }

@@ -28,7 +28,6 @@ class CreateAnalysesTable extends Migration
             $table->bigInteger('likes')->default(0);//likes count
             $table->bigInteger('dislikes')->default(0);//dislikes count
             $table->longText('description');
-            $table->text('tags')->nullable();
             $table->enum('direction' , ['bullish' , 'bearish' , 'neutral']);
             $table->tinyInteger('status')->default(0);
 

@@ -50,7 +50,7 @@ class StackQuestionController extends Controller
             }
         }
 
-        $question = StackQuestion::create($validatedData); //save question
+        $question = new StackQuestionResources( StackQuestion::create($validatedData)); //store question
 
         if ($files != null) {
             $question->images()->saveMany($images);//save images
@@ -59,16 +59,30 @@ class StackQuestionController extends Controller
         }
 
         //store tags
+        //store tags
         $tagNames = explode(",", $request->tag);//separate tags
         $tagIds = [];
 
-        foreach($tagNames as $tagName){
-            $tag = StackTag::firstOrCreate(['tag'=>$tagName]);
-            if($tag){
-              $tagIds[] = $tag->id;
+        foreach ($tagNames as $tagName) {
+            $findTag =StackTag::where('tag' , $tagName)->first();
+            if($findTag == NULL){
+
+                $tag = StackTag::firstOrCreate(['tag' => $tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }else{
+                $tag = StackTag::where('tag' , $tagName)->first();
+                $tag->count = $tag->count + 1;
+                $tag->save();
+
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
             }
         }
         $question->tags()->sync($tagIds);
+
 
         $this->userLevel();
 
@@ -76,8 +90,6 @@ class StackQuestionController extends Controller
             'success'=>true,
             'message'=> 'با موفقیت ثبت شد',
             'question'=>$question,
-            'tags'=>$tagNames,
-            'image'=>$images,
         ]);
     }
 
@@ -122,18 +134,30 @@ class StackQuestionController extends Controller
             $question->update();
 
 
-            $tagNames = explode(",", $request->tag);//separate tags
+        //store tags
+        $tagNames = explode(",", $request->tag);//separate tags
+        $tagIds = [];
 
-            $tagIds = [];
+        foreach ($tagNames as $tagName) {
+            $findTag =StackTag::where('tag' , $tagName)->first();
+            if($findTag == NULL){
 
-            foreach ($tagNames as $tagName) {
-                $tag = StackTag::firstOrCreate(['tag'=>$tagName]);
+                $tag = StackTag::firstOrCreate(['tag' => $tagName]);
+                if ($tag) {
+                    $tagIds[] = $tag->id;
+                }
+            }else{
+                $tag = StackTag::where('tag' , $tagName)->first();
+                $tag->count = $tag->count + 1;
+                $tag->save();
+
                 if ($tag) {
                     $tagIds[] = $tag->id;
                 }
             }
-
+        }
         $question->tags()->sync($tagIds);
+
 
         return response()->json([
             'success'=>true,

@@ -18,8 +18,6 @@ class CreateStackCommentsTable extends Migration
         Schema::create('stack_comments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();
-
 
             $table->integer('commentable_id')->nullable();
             $table->string('commentable_type')->nullable();
@@ -29,8 +27,6 @@ class CreateStackCommentsTable extends Migration
             $table->tinyInteger('status')->default(1);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('parent_id')->references('id')->on('stack_comments')->onDelete('cascade');
-            $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
         });

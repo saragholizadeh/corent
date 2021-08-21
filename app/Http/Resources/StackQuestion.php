@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
-use App\Models\Category;
+use App\Models\StackCategory;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StackQuestion extends JsonResource
@@ -23,7 +23,7 @@ class StackQuestion extends JsonResource
 
            //get category title for category_id field in question
            $questionCategoryID = $this->category_id;
-           $category_id = Category::where('id' , $questionCategoryID)->first();
+           $category_id = StackCategory::where('id' , $questionCategoryID)->first();
            $category_title = $category_id->title ;
 
 

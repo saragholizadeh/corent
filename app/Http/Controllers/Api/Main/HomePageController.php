@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostCollection;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 
@@ -33,6 +34,20 @@ class HomePageController extends Controller
         $iranCategory = Category::where('title' , 'اخبار ایران')->first();
         $iranId = $iranCategory->id;
 
-        $posts = Post::where('category_id' , $iranId)->
+        $posts = Post::where('category_id' , $iranId)
+            ->orderBy('created_at', 'desc')
+            ->select('title', 'body')
+            ->take(4)
+            ->get();
+        return response()->json([
+            'iran_news'=>$posts
+        ], 200);
     }
+
+    public function bitcoinTag(){
+        $bitcoinTag = Tag::where('tag' , 'بیت کوین')->get();
+        dd($bitcoinTag);
+    }
+
+
 }
