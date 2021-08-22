@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Main\HomePageController;
 use App\Http\Controllers\Api\Main\NavBarController;
+use App\Http\Controllers\Api\Stack\Main\StackAnswerController;
 use Illuminate\Support\Facades\Route;
 
 //Admin panel controllers
@@ -303,10 +304,11 @@ Route::group([
         //questions (create , update and delete)
         Route::post('questions', [StackQuestionController::class, 'store']);
         Route::put('question/{id}', [StackQuestionController::class ,'update']);
-        ROute::delete('question/{id}', [StackQuestionController::class , 'destroy']);
+        Route::delete('question/{id}', [StackQuestionController::class , 'destroy']);
+
+
 
         //comments
-
         Route::group([
 
             'middleware'=>['auth.stack_level:active,experienced,expert,specialist,professor,master'],
@@ -322,6 +324,10 @@ Route::group([
         Route::delete('deleteReply/{id}', [StackCommentController::class , 'destroyReply']);
 
         });
+
+        //answers
+        Route::post('addAnswer/question/{id}' , [StackAnswerController::class , 'store'])
+        ->middleware('auth');
 
         //like question
         Route::post('like/question/{id}', [StackQuestionLikeController::class , 'addLike'])

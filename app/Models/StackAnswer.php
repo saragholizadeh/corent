@@ -36,4 +36,16 @@ class StackAnswer extends Model
         return $this->morphMany(StackComment::class, 'commentable' );
     }
 
+    public function images(){
+        return $this->morphMany(Image::class , 'imageable' );
+    }
+
+    public function likes(){
+        return $this->morphMany(StackLike::class, 'likeable');
+    }
+
+    public function dislikes(){
+        return $this->morphMany(StackDislike::class, 'dislikeable');
+    }
+
 }
