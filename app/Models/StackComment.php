@@ -28,10 +28,6 @@ class StackComment extends Model
         return $this->morphTo();
     }
 
-    public function replies(){
-        return $this->hasMany(StackComment::class, 'parent_id');
-    }
-
     public function likes(){
         return $this->morphMany(StackLike::class, 'likeable');
     }

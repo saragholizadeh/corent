@@ -30,7 +30,6 @@ class StackQuestion extends Model implements Viewable
      ];
 
 
-
     public function category(){
         return $this->belongsTo(StackCategory::class , 'category_id');
     }
