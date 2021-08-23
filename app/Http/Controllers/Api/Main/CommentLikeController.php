@@ -24,15 +24,12 @@ class CommentLikeController extends Controller
         ->where('user_id' , $user_id)
         ->first();
 
-
         $checkUserDisiked = Dislike::where('dislikeable_id' , $id)
         ->where('dislikeable_type' ,'App\Models\Comment')
         ->where('user_id' , $user_id)
         ->first();
 
-
         if($checkUserDisiked==NULL){
-
             if($checkUserLiked){
                 $message = 'liked before';
             }
@@ -46,7 +43,6 @@ class CommentLikeController extends Controller
 
                 $message = 'liked';
             }
-
         }
         else{
             $checkUserDisiked = Dislike::where('dislikeable_id' , $id)
@@ -61,12 +57,8 @@ class CommentLikeController extends Controller
             $comment->dislikes = $dislikes-1;
             $comment->likes = $likes+1; // add a new like in comments table for likes column
             $comment->update();
-
             $message = 'liked';
-
         }
-
-
         return response()->json($message);
     }
 

@@ -44,7 +44,7 @@ use App\Http\Controllers\Api\Stack\Main\StackCommentController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionController;
 use App\Http\Controllers\Api\Stack\Main\StackUserPanelController;
 use App\Http\Controllers\Api\Stack\Main\StackCommentLikeController;
-use App\Http\Controllers\Api\Stack\Main\StackQuestionLikeController;
+use App\Http\Controllers\Api\Stack\Main\StackLikeController;
 use App\Http\Controllers\Api\Stack\Main\StackApproveAnswerController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionCategoryController;
 
@@ -306,44 +306,57 @@ Route::group([
         Route::put('question/{id}', [StackQuestionController::class ,'update']);
         Route::delete('question/{id}', [StackQuestionController::class , 'destroy']);
 
-
-
         //comments
         Route::group([
 
-            'middleware'=>['auth.stack_level:active,experienced,expert,specialist,professor,master'],
+            'middleware'=>['auth.stack_level:active,experienced,expert,specialist,professor,master,admin'],
 
         ],function($router){
 
-             // add a new comment for this question
+        // add a new comment for the question
         Route::post('addComment/question/{id}', [StackCommentController::class , 'commentStore']);
-        Route::post('addReply/comment/{id}', [StackCommentController::class , 'replyStore']);
         Route::put('editComment/comment/{id}', [StackCommentController::class , 'commentUpdate']);
-        Route::put('editReply/reply/{id}', [StackCommentController::class , 'replyUpdate']);
-        Route::delete('deleteComment/{id}', [StackCommentController::class , 'destroyComment']);
-        Route::delete('deleteReply/{id}', [StackCommentController::class , 'destroyReply']);
+        Route::delete('deleteComment/{id}', [StackCommentController::class , 'deleteComment']);
 
+        // add a new comment for the answer
+        Route::post('addComment/answer/{id}', [StackCommentController::class , 'commentStore']);
+        Route::put('editComment/comment/{id}', [StackCommentController::class , 'commentUpdate']);
+        Route::delete('deleteComment/{id}', [StackCommentController::class , 'deleteComment']);
         });
 
         //answers
         Route::post('addAnswer/question/{id}' , [StackAnswerController::class , 'store'])
         ->middleware('auth');
+        Route::put('editAnswer/{id}' , [StackAnswerController::class , 'update'])
+            ->middleware('auth');
+        Route::get('answer/{id}' , [StackAnswerController::class , 'show'])
+            ->middleware('auth');
+        Route::delete('deleteAnswer/{id}' , [StackAnswerController::class , 'delete'])
+            ->middleware('auth');
+
+        //likes and disliked
 
         //like question
-        Route::post('like/question/{id}', [StackQuestionLikeController::class , 'addLike'])
-        ->middleware('auth.stack_level:active,experienced,expert,specialist,professor,master');
-
+        Route::post('like/question/{id}', [StackLikeController::class , 'likeQuestion'])
+        ->middleware('auth.stack_level:active,experienced,expert,specialist,professor,master,admin');
         // dislike question
-        Route::post('dislike/question/{id}', [StackQuestionLikeController::class , 'addDislike'])
-        ->middleware('auth.stack_level:expert,specialist,Professor,master');
+        Route::post('dislike/question/{id}', [StackLikeController::class , 'dislikeQuestion'])
+        ->middleware('auth.stack_level:expert,specialist,Professor,master,admin');
 
-        //like comments or replies
-        Route::post('like/comment/{id}', [StackCommentLikeController::class , 'addLike'])
-        ->middleware('auth.stack_level:active,experienced,expert,specialist,professor,master');
+        //like answer
+        Route::post('like/answer/{id}', [StackLikeController::class , 'likeAnswer'])
+            ->middleware('auth.stack_level:active,experienced,expert,specialist,professor,master,admin');
+        // dislike answer
+        Route::post('dislike/answer/{id}', [StackLikeController::class , 'dislikeAnswer'])
+            ->middleware('auth.stack_level:expert,specialist,Professor,master,admin');
 
-        // dislike comments or replies
-        Route::post('dislike/comment/{id}', [StackCommentLikeController::class , 'addDislike'])
-        ->middleware('auth.stack_level:experienced,expert,specialist,professor,master');
+        //like comments
+        Route::post('like/comment/{id}', [StackLikeController::class , 'likeComment'])
+        ->middleware('auth.stack_level:active,experienced,expert,specialist,professor,master,admin');
+        // dislike comments
+        Route::post('dislike/comment/{id}', [StackLikeController::class , 'dislikeComment'])
+        ->middleware('auth.stack_level:experienced,expert,specialist,professor,master,admin');
+
 
 
         //approve the best comment as answer of question
