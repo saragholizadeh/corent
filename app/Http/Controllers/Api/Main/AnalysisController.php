@@ -203,7 +203,6 @@ class AnalysisController extends Controller
         $analysis->save();
 
         //update tags
-        //store tags
         $tagNames = explode(",", $request->tag);//separate tags
         $tagIds = [];
 

@@ -35,7 +35,6 @@ class FundamentalController extends Controller
 
         $validatedData = $request->all();
 
-
         $fundamental = new FundamentalResources (Fundamental::find($id));
 
         $fundamental->currency = $validatedData['currency'];

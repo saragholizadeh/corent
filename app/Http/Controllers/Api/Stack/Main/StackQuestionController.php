@@ -102,9 +102,6 @@ class StackQuestionController extends Controller
 
         $validateData = $request->all();
 
-        $user_id = JWTAuth::user()->id;
-
-        $validatedData['user_id'] = $user_id;
 
         $files = $request->file('image');//getting post images from request
 

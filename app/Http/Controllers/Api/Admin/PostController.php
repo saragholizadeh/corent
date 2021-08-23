@@ -111,12 +111,6 @@ class PostController extends Controller
 
         $validatedData = $request->all();
 
-        $user_id = JWTAuth::user()->id;
-
-        $validatedData['user_id'] = $user_id;
-
-        $tags = explode(",", $request->tags);
-
         if ($request->hasfile('image')) {
 
             $postTitle = $request->title; //post title for folder name and the images inside it

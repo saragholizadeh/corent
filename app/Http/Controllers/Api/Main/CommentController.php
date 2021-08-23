@@ -13,7 +13,6 @@ use App\Http\Controllers\Api\Main\PostDetailsController;
 
 class CommentController extends Controller
 {
-
     public function commentStore(StoreCommentRequest $request , $id){
 
         $validateData = $request->all();
