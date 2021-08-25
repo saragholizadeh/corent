@@ -38,6 +38,7 @@ class StackQuestion extends JsonResource
             'created_at'=>$this->created_at,
             'tags'=>StackTag::collection($this->tags)->pluck('tag'),
             'images'=>Image::collection($this->images)->pluck('path'),
+            'comments_count'=>StackComment::collection($this->comments)->count(),
         ];
     }
 }

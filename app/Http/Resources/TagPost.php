@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Tag extends JsonResource
+class TagPost extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,7 @@ class Tag extends JsonResource
     {
         return [
             'tag'=>$this->tag,
-            'posts'=>Post::collection($this->posts),
-            ];
+            'posts'=>PostTag::collection($this->posts),
+        ];
     }
 }

@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable();
             $table->string('location')->nullable();
             $table->text('bio')->nullable();
+            $table->string('avatar')->nullable();
 
             //wallet adresses
             $table->string('bitcoin')->nullable();

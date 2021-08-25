@@ -137,7 +137,7 @@ class PostController extends Controller
             }
         }
 
-        $post = Post::find($id);
+        $post = new PostResources(Post::find($id)) ;
 
         $post->category_id = $validatedData['category_id'];
         $post->title = $validatedData['title'];

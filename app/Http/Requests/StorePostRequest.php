@@ -31,6 +31,7 @@ class StorePostRequest extends FormRequest
             'study_time'=>['required' ,'numeric'],
             'tag'=>['required','string' ,new CheckBadWords()],
             'image'=>['required'],
+            'image_type'=>['required'],
         ];
 
         if ('PUT' === $this->method()) {

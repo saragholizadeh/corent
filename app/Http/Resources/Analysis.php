@@ -34,6 +34,8 @@ class Analysis extends JsonResource
             'dislikes'=>$this->dislikes,
             'tags'=>$this->tags,
             'created_at'=>$this->created_at,
+            'images'=>Image::collection($this->images),
+            'comments_count'=>Comment::collection($this->comments)->count(),
         ];
     }
 }

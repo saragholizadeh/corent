@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Tag extends JsonResource
+class PostTag extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,10 @@ class Tag extends JsonResource
     public function toArray($request)
     {
         return [
-            'tag'=>$this->tag,
-            'posts'=>Post::collection($this->posts),
-            ];
+            'title'=>$this->title,
+            'body'=>$this->body,
+            'images'=>Image::collection($this->images)->pluck('path'),
+            'comments_count'=>Comment::collection($this->comments)->count(),
+        ];
     }
 }

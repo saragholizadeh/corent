@@ -43,7 +43,6 @@ use App\Http\Controllers\Api\Stack\Main\StackHomeController;
 use App\Http\Controllers\Api\Stack\Main\StackCommentController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionController;
 use App\Http\Controllers\Api\Stack\Main\StackUserPanelController;
-use App\Http\Controllers\Api\Stack\Main\StackCommentLikeController;
 use App\Http\Controllers\Api\Stack\Main\StackLikeController;
 use App\Http\Controllers\Api\Stack\Main\StackApproveAnswerController;
 use App\Http\Controllers\Api\Stack\Main\StackQuestionCategoryController;
@@ -244,14 +243,16 @@ Route::group([
             Route::post('dislike/analysis/{id}', [AnalysisLikeController::class , 'addDislike']);
 
         });
-        Route::get('Home' , [HomePageController::class , 'index']);
 
         Route::get('nav' , [NavBarController::class , 'index']);
         Route::get('navSubCategories/{id}' , [NavBarController::class , 'showSubCategories']);
 
+        //home page routes
         Route::get('lastNews' , [HomePageController::class , 'lastNews']);
+        Route::get('subNews/{id}' , [HomePageController::class , 'subNews']); //for example iran news and related posts
+        Route::get('favAnalyses' , [HomePageController::class , 'favAnalyses']); // favorite analyses
 
-        Route::get('iranNews' , [HomePageController::class , 'iranNews']);
+        Route::get('/tags/{tag}' , [GetTagController::class , 'show']);//show posts related to this tag
 
         Route::get('/category/{id}' , [CategoryDetailsController::class , 'show']);//show category with subcategories and related posts
 
@@ -260,8 +261,6 @@ Route::group([
         Route::get('analysis/{id}' , [AnalysisController::class , 'show' ]);//get all analyses and show analysis
 
         Route::get('analyses' , [AnalysisController::class , 'lastAnalyses']);//get last Analyses
-
-        Route::get('/tags/{tag}' , [GetTagController::class , 'show']);//show posts related to this tag
 
         Route::get('regulations' , [RegulationDetailsController::class , 'index']); // show all regulation countries
         Route::get('regulation/{id}' , [RegulationDetailsController::class , 'show']); // get regulstion details
