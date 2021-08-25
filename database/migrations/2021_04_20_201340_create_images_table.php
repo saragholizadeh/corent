@@ -22,6 +22,7 @@ class CreateImagesTable extends Migration
 
             $table->string('image');
             $table->string('path');
+            $table->enum('type' , ['cover' , 'postPics'])->nullable();//is this image for post cover or post content
 
             $table->timestamp('created_at')->useCurrent();
         });

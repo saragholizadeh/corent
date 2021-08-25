@@ -42,6 +42,7 @@ class Post extends JsonResource
             'created_at'=>$this->created_at,
             'tags'=>Tag::collection($this->tags)->pluck('tag'),
             'images'=>Image::collection($this->images)->pluck('path'),
+            'comments_count'=>Comment::collection($this->comments)->count(),
         ];
     }
 

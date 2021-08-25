@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Main;
 
+use App\Http\Resources\PostCollection;
 use App\Models\Post;
 use App\Http\Resources\Post as PostResources;
 use App\Models\Comment;
@@ -28,17 +29,9 @@ class PostDetailsController extends Controller
         $views = views($postVIew)->count();
 
         //show comments of posts
-        $comments = Comment::where('commentable_type' , 'App\Models\Post')->first();
-
-        if($comments==NULL){
-            $comments = 'there is no comment for this post yet';
-        }else{
-            $comments = Comment::where('commentable_type' , 'App\Models\Post')->with('replies.replies')->get();
-        }
-
+        $comments = Comment::where('commentable_type' , 'App\Models\Post')->with('replies.replies')->get();
         $postCategory = $postFind->category_id;
-
-        $related_posts = Post::where('category_id' , $postCategory)->get();
+        $related_posts =new PostCollection( Post::where('category_id' , $postCategory)->get());
 
         return response()->json([
            'post' => $post,

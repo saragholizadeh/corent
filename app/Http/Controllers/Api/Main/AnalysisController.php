@@ -42,19 +42,9 @@ class AnalysisController extends Controller
     {
         $analyses = new AnalysisCollection (Analysis::orderBy('created_at', 'desc')->get());
 
-        $header = array(
-            'Content-Type' => 'application/json; charset=UTF-8',
-            'charset' => 'utf-8'
-        );
-
-        $responsecode = 200;
-
         return response()->json([
             'last_analyses' => $analyses,
-
-        ], $responsecode, $header, JSON_UNESCAPED_UNICODE);
-
-
+        ],200);
     }
 
     /**
@@ -148,10 +138,24 @@ class AnalysisController extends Controller
                 ->with('replies.replies')
                 ->get());
         }
+
+        $exchange = $analysis->exchange;
+        $pair = $analysis->pair;
+        $direction = $analysis->direction;
+
+        $relatedAnalyses = new AnalysisCollection(
+            Analysis::where('exchange' , $exchange)
+            ->orWhere('pair' , $pair)
+            ->orWhere('direction' , $direction)
+            ->except($analysis)
+            ->take(4)
+            ->get()
+        );
         return response()->json([
             'analysis' => $analysis,
             'analysis_views' => $views,
             'comments' => $comments,
+            'related_analyses'=>$relatedAnalyses
         ], 200);
 
     }
